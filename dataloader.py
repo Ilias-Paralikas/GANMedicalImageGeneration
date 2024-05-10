@@ -1,10 +1,13 @@
 from monai.transforms import LoadImage, Orientation, Resize
+from skimage.transform import resize
 import os
 import numpy as np
 import re
 import torch    
 from scipy.ndimage import zoom
 from visualizer import Visualizer
+import cv2
+
 
 class ImagePreprocessor():
     def __init__(self,data_folder,
@@ -13,8 +16,7 @@ class ImagePreprocessor():
                     dimensions,
                     slices,
                     image_datatype,
-                    mask_datatype,
-                    mode):
+                    mask_datatype):
         self.data_folder = data_folder
         self.mask_folder = os.path.join(data_folder,mask_folder)
         self.patients_folder =os.path.join(data_folder,patients_folder)
@@ -24,8 +26,12 @@ class ImagePreprocessor():
         self.slices = slices
         self.image_datatype = image_datatype
         self.mask_datatype = mask_datatype
-        self.target_folder = os.path.join(data_folder,'sliced_' +mode+'_'+ str(dimensions) + '_' + str(slices)+'_'+self.image_datatype.__name__)
-        self.mode = mode
+        self.sliced_folder = os.path.join(data_folder,'sliced')
+        try :
+            os.makedirs(self.sliced_folder)
+        except:
+            print('sliced folder exists')
+        self.target_folder = os.path.join(self.sliced_folder,'sliced_'+'_'+ str(dimensions) + '_' + str(slices)+'_'+self.image_datatype.__name__)
 
         masks = os.listdir(self.mask_folder)
         patients = os.listdir(self.patients_folder)
@@ -53,18 +59,29 @@ class ImagePreprocessor():
         resized_image= zoom(image, zoom_factors,datatype)
         return resized_image
         
-    def read_raw_image(self, index):
+    def read_image(self, index):
         index = index % self.len
         index = self.numbers[index]
         filepath  =  os.path.join(self.patients_folder,'patient'+str(index)+'.nii.gz')
         return self.preprocess(filepath,self.image_datatype)
 
-    def read_raw_mask(self, index):
+    def read_mask(self, index):
         index = index % self.len
         index = self.numbers[index]
         filepath  =  os.path.join(self.mask_folder,'segmentation'+str(index)+'.nrrd')
         return self.preprocess(filepath,self.mask_datatype)
+    
+    def read_raw_image(self, index):
+        index = index % self.len
+        index = self.numbers[index]
+        filepath  =  os.path.join(self.patients_folder,'patient'+str(index)+'.nii.gz')
+        return self.loader(filepath)
 
+    def read_raw_mask(self, index):
+        index = index % self.len
+        index = self.numbers[index]
+        filepath  =  os.path.join(self.mask_folder,'segmentation'+str(index)+'.nrrd')
+        return self.loader(filepath)
     
     def store_data(self, overwrite = False):
         try:
@@ -74,9 +91,9 @@ class ImagePreprocessor():
             print('''Probelm creating the folder, make sure that the folder does not exits\nIf it exists, set overwrite to True to overwrite''')
         if overwrite:
             for i in range(self.len):
-                image = self.read_raw_image(i)
+                image = self.read_image(i)
                 image_tensor = torch.from_numpy(image)
-                mask = self.read_raw_mask(i)                
+                mask = self.read_mask(i)                
                 mask_tensor = torch.from_numpy(mask)
                 
                 filename = os.path.join(self.target_folder, 'patient'+str(self.numbers[i])+'.pt')
@@ -87,6 +104,7 @@ class ImagePreprocessor():
     def get_stats(self):
         return self.len,self.numbers,self.target_folder
     
+  
     
 class Dataloader:
     def __init__(self,
@@ -97,16 +115,21 @@ class Dataloader:
                 slices=64,
                 overwrite=False,
                 image_datatype =np.int16,
-                mask_datatype = np.bool_,
-                mode= 'constant'):
+                mask_datatype = np.bool_):
         self.slices = slices
         self.dimensions = dimensions
-        preprocessor = ImagePreprocessor(data_folder, mask_folder, patients_folder, dimensions, slices, image_datatype, mask_datatype,mode)
-        preprocessor.store_data(overwrite)
+        self.preprocessor = ImagePreprocessor(data_folder, mask_folder, patients_folder, dimensions, slices, image_datatype, mask_datatype)
+        self.preprocessor.store_data(overwrite)
         
-        self.len,self.numbers,self.datafolder = preprocessor.get_stats()
+        self.len,self.numbers,self.datafolder = self.preprocessor.get_stats()
         self.patient_files = [os.path.join(self.datafolder,f) for f in os.listdir(self.datafolder)]
     
+    def get_raw_data(self,index):
+        index = index % self.len
+        index = self.numbers[index]
+        image = self.preprocessor.read_raw_image(index)
+        mask = self.preprocessor.read_raw_mask(index)
+        return image,mask
 
     def __len__(self):
         return self.len
@@ -120,6 +143,3 @@ class Dataloader:
         mask_tensor = data['mask']
         return image_tensor, mask_tensor
 
-
-
-# loader=Dataloader(patients_folder='101',mask_folder='masks_101',dimensions=512,slices=152,overwrite=True)
