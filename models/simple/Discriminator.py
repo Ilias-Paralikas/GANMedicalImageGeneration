@@ -3,8 +3,9 @@ import torch.nn as nn
 
 
 class Discriminator(nn.Module):
-    def __init__(self,in_channels=2,out_channels=512):
+    def __init__(self,in_channels=2,out_channels=512,path = 'models/simple/discriminator.pth'):
         super(Discriminator, self).__init__()
+        self.path = path
         self.in_channels = in_channels  
         kernel_size = 3
         stride = 1

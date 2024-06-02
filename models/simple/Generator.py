@@ -2,8 +2,9 @@ import torch
 import torch.nn as nn
 
 class Generator(nn.Module):
-    def __init__(self,noise_shape, channels=64):
+    def __init__(self,noise_shape, channels=64,path = 'models/simple/generator.pth'):
         super(Generator, self).__init__()
+        self.path  =path
         noise_dim  =noise_shape [0]
         self.net = nn.Sequential(
             self.create_block(noise_dim, channels),
