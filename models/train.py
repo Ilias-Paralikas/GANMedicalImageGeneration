@@ -58,7 +58,7 @@ def train_GAN(generator,
             disc_loss.backward()
             real_images_loss += disc_loss.mean.item()
             # train the discriminator on fake images
-            noise  = torch.randn(batch_size, *NOISE_SHAPE, device=device)
+            noise  = torch.randn(batch_size, *noise_shape, device=device)
             
             # get the fake images
             fake_images = generator(noise)
