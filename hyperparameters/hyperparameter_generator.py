@@ -16,7 +16,7 @@ def main():
     parser.add_argument('--batch_size',type=int,default=1)
     parser.add_argument('--gen_lr',type=float,default=0.0002)
     parser.add_argument('--disc_lr',type=float,default=0.0002)
-    parser.add_argument('--gen_opitm', type=str, default='Adam', help='selected from https://pytorch.org/docs/stable/optim.html#algorithms, provided as a string')
+    parser.add_argument('--gen_optim', type=str, default='Adam', help='selected from https://pytorch.org/docs/stable/optim.html#algorithms, provided as a string')
     parser.add_argument('--disc_optim', type=str, default='Adam', help='selected from https://pytorch.org/docs/stable/optim.html#algorithms, provided as a string')
     parser.add_argument('--loss_fn', type=str, default='BCELoss', help='selected from https://pytorch.org/docs/stable/nn.html#loss-functions, provided as a string, without the nn')
     
@@ -28,7 +28,7 @@ def main():
         'batch_size':args.batch_size,
         'gen_lr':args.gen_lr,
         'disc_lr':args.disc_lr,
-        'gen_opitm':args.gen_opitm,
+        'gen_optim':args.gen_optim,
         'disc_optim':args.disc_optim,
         'loss_fn':args.loss_fn
         

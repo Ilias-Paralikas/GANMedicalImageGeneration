@@ -24,12 +24,9 @@ def train_GAN(generator,
         assert output.shape == torch.Size([1, 1])
         
     test_compatibility(generator, discriminator,dataloader,noise_shape)
-    if gen_optim is None:
-        gen_optim = torch.optim.Adam(generator.parameters(), lr=gen_lr)
-    if disc_optim is None:
-        disc_optim = torch.optim.Adam(discriminator.parameters(), lr=disc_lr)
-    if loss_fn is None:
-        loss_fn = nn.BCELoss()
+    gen_optim =gen_optim(generator.parameters(), lr=gen_lr)
+    disc_optim = disc_optim(discriminator.parameters(), lr=disc_lr)
+    loss_fn = loss_fn()
         
     gen_losses = []
     disc_losses = []
@@ -56,7 +53,7 @@ def train_GAN(generator,
             # calculate the loss between the real and the generated labes
             disc_loss = loss_fn(output, label)
             disc_loss.backward()
-            real_images_loss += disc_loss.mean.item()
+            real_images_loss += disc_loss.mean().item()
             # train the discriminator on fake images
             noise  = torch.randn(batch_size, *noise_shape, device=device)
             
