@@ -15,6 +15,7 @@ def main():
 
     parser.add_argument('--hyperparameters_file', type=str, default='hyperparameters/hyperparameters.json', help='String')
     parser.add_argument('--save_filepaths', type=str, default='saved_models', help='String')
+    parser.add_argument('--sliced_folder',type=str,default='Sliced')
 
 
     args =parser.parse_args()    
@@ -54,7 +55,8 @@ def main():
     except:
         print("No weights found")
         
-    dataset=BreastCancerDataset(dimensions=256,slices=64)
+    dataset=BreastCancerDataset(sliced_folder=args.sliced_folder)
+    dataset.show()
     dataloader=  torch.utils.data.DataLoader(dataset, batch_size=hyperparameters['batch_size'], shuffle=True, num_workers=0)
     # train_GAN(generator=gen,
     #           discriminator=disc,
