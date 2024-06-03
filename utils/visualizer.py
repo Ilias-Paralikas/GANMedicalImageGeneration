@@ -15,7 +15,7 @@ class Visualizer():
         return
 
 
-    def __call__(self, images=None, masks=None):
+    def __call__(self, images=None, masks=None,savefile=None):
         if images is None and masks is None:
             print('please provide images, masks, or both')
             return
@@ -46,7 +46,10 @@ class Visualizer():
         for i in range(total, len(axes_flat)):
             axes_flat[i].axis('off')
         plt.tight_layout()
-        plt.show()
+        if savefile is not None:
+            plt.savefig(savefile)
+        else:
+            plt.show()
         
     def visualize_verticaly(self,dataloader,index):
         index= index % dataloader.slices

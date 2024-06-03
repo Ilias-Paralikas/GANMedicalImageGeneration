@@ -2,9 +2,9 @@ import torch
 import torch.nn as nn
 
 
-class Discriminator(nn.Module):
+class SimpleDiscriminator(nn.Module):
     def __init__(self,in_channels=2,out_channels=512,path = 'models/simple/discriminator.pth'):
-        super(Discriminator, self).__init__()
+        super(SimpleDiscriminator, self).__init__()
         self.path = path
         self.in_channels = in_channels  
         kernel_size = 3

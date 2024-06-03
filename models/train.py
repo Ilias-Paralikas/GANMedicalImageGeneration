@@ -86,4 +86,7 @@ def train_GAN(generator,
         gen_losses.append(generator_loss)
         disc_losses.append(real_images_loss + fake_images_loss)
         print(f"Epoch {epoch} Generator Loss: {generator_loss} Discriminator Loss: {real_images_loss + fake_images_loss}")
+        
+        torch.save(generator.state_dict(), generator.path)
+        torch.save(discriminator.state_dict(), discriminator.path)
     return gen_losses, disc_losses

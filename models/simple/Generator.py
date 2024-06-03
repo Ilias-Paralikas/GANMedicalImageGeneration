@@ -2,9 +2,9 @@ import torch
 import torch.nn as nn
 
 from models.bases.generator_base import GeneratorBase
-class Generator(GeneratorBase):
+class SimpleGenerator(GeneratorBase):
     def __init__(self,noise_shape, channels=64,path = 'models/simple/generator.pth'):
-        super(Generator, self).__init__()
+        super(SimpleGenerator, self).__init__()
         self.path  =path
         self.noise_shape = noise_shape
         self.noise_dim  =noise_shape [0]

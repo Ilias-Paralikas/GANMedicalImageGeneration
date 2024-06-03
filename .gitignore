@@ -3,6 +3,8 @@ __pycache__/
 data/
 data_archive/
 sliced/
+saved_models/
 bibliography/
 *discriminator.pth
 *generator.pth
+hyperparameters/hyperparameters.json
