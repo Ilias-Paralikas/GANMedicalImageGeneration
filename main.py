@@ -69,7 +69,8 @@ def main():
               disc_lr = hyperparameters['disc_lr'],
               loss_fn=getattr(nn, hyperparameters['loss_fn']),
               device= device)
-    gen.show_generated_image(savefile=os.path.join(architecture_filepaths,'img.jpg'))
+    gen.show_generated_image(savefile=os.path.join(architecture_filepaths,'img.jpg'),
+                             device=device)
 
 
 
