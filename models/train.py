@@ -16,12 +16,12 @@ def train_GAN(generator,
               loss_fn=None,
               device= 'cpu'):
     def test_compatibility(generator, discriminator,dataloader,noise_shape,device):
-        single_element= next(iter(dataloader))[0]
-        noise = torch.randn(1,*noise_shape).to(device)
-        fake_image = generator(noise)
-        output = discriminator(fake_image)        
-        assert single_element.shape == fake_image.squeeze(0).shape
-        assert output.shape == torch.Size([1, 1])
+      single_element= next(iter(dataloader))[0]
+      noise = torch.randn(1,*noise_shape).to(device)
+      fake_image = generator(noise)
+      output = discriminator(fake_image)        
+      assert single_element.shape == fake_image.squeeze(0).shape
+      assert output.shape == torch.Size([1, 1])
         
     test_compatibility(generator, discriminator,dataloader,noise_shape,device)
     gen_optim =gen_optim(generator.parameters(), lr=gen_lr)
@@ -30,8 +30,8 @@ def train_GAN(generator,
         
     gen_losses = []
     disc_losses = []
-    
-  
+
+
     real_label = 1
     fake_label = 0
     for epoch in range(epochs):
@@ -86,4 +86,5 @@ def train_GAN(generator,
         
         torch.save(generator.state_dict(), generator.path)
         torch.save(discriminator.state_dict(), discriminator.path)
+
     return gen_losses, disc_losses
