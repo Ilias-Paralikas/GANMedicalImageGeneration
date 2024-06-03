@@ -37,6 +37,7 @@ def main():
                             noise_shape=hyperparameters['noise_shape'],
                             path=  generator_path).to(device)
     
+    
     discriminator_choices ={
         'Simple': SimpleDiscriminator
     }
@@ -47,6 +48,12 @@ def main():
         path=discriminator_path
     ).to(device)
     
+    try:
+        gen.load_state_dict(torch.load(gen.path))
+        disc.load_state_dict(torch.load(disc.path))
+    except:
+        print("No weights found")
+        
     dataset=BreastCancerDataset(dimensions=256,slices=64)
     dataloader=  torch.utils.data.DataLoader(dataset, batch_size=hyperparameters['batch_size'], shuffle=True, num_workers=0)
     # train_GAN(generator=gen,
