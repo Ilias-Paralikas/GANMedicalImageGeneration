@@ -58,17 +58,17 @@ def main():
     dataset=BreastCancerDataset(sliced_folder=args.sliced_folder)
     dataset.show()
     dataloader=  torch.utils.data.DataLoader(dataset, batch_size=hyperparameters['batch_size'], shuffle=True, num_workers=0)
-    # train_GAN(generator=gen,
-    #           discriminator=disc,
-    #           dataloader=dataloader,
-    #           noise_shape=hyperparameters['noise_shape'],
-    #           epochs=hyperparameters['epochs'],
-    #           gen_optim =getattr(torch.optim, hyperparameters['gen_optim']),
-    #           gen_lr = hyperparameters['gen_lr'],
-    #           disc_optim=getattr(torch.optim, hyperparameters['disc_optim']),
-    #           disc_lr = hyperparameters['disc_lr'],
-    #           loss_fn=getattr(nn, hyperparameters['loss_fn']),
-    #           device= device)
+    train_GAN(generator=gen,
+              discriminator=disc,
+              dataloader=dataloader,
+              noise_shape=hyperparameters['noise_shape'],
+              epochs=hyperparameters['epochs'],
+              gen_optim =getattr(torch.optim, hyperparameters['gen_optim']),
+              gen_lr = hyperparameters['gen_lr'],
+              disc_optim=getattr(torch.optim, hyperparameters['disc_optim']),
+              disc_lr = hyperparameters['disc_lr'],
+              loss_fn=getattr(nn, hyperparameters['loss_fn']),
+              device= device)
     gen.show_generated_image(savefile=os.path.join(architecture_filepaths,'img.jpg'))
 
 
