@@ -14,8 +14,8 @@ def main():
     parser = argparse.ArgumentParser(description='Script Configuration via Command Line')
 
     parser.add_argument('--hyperparameters_file', type=str, default='hyperparameters/hyperparameters.json', help='String')
-    parser.add_argument('--save_filepaths', type=str, default='saved_models', help='String')
-    parser.add_argument('--sliced_folder',type=str,default='sliced')
+    parser.add_argument('--save_filepaths', type=str, default='../saved_models', help='String')
+    parser.add_argument('--sliced_folder',type=str,default='../sliced')
 
 
     args =parser.parse_args()    
@@ -52,6 +52,7 @@ def main():
     try:
         gen.load_state_dict(torch.load(gen.path))
         disc.load_state_dict(torch.load(disc.path))
+        print("Weights loaded")
     except:
         print("No weights found")
         

@@ -24,6 +24,15 @@ class ImagePreprocessor():
                     image_datatype,
                     mask_datatype,
                     transforms= normalize,):
+        try :
+            os.makedirs(self.sliced_folder)
+        except:
+            print('sliced folder exists')
+            self.len = len(os.listdir(self.sliced_folder))
+            self.numbers = self.extract_numbers(os.listdir(self.sliced_folder))
+            self.target_folder = os.path.join(self.sliced_folder,'sliced_'+'_'+ str(dimensions) + '_' + str(slices)+'_'+self.image_datatype.__name__)
+
+        self.target_folder = os.path.join(self.sliced_folder,'sliced_'+'_'+ str(dimensions) + '_' + str(slices)+'_'+self.image_datatype.__name__)
         self.data_folder = data_folder
         self.mask_folder = os.path.join(data_folder,mask_folder)
         self.patients_folder =os.path.join(data_folder,patients_folder)
@@ -35,12 +44,7 @@ class ImagePreprocessor():
         self.mask_datatype = mask_datatype
         self.sliced_folder = sliced_folder
         self.transforms  =transforms
-        try :
-            os.makedirs(self.sliced_folder)
-        except:
-            print('sliced folder exists')
-        self.target_folder = os.path.join(self.sliced_folder,'sliced_'+'_'+ str(dimensions) + '_' + str(slices)+'_'+self.image_datatype.__name__)
-
+      
         masks = os.listdir(self.mask_folder)
         patients = os.listdir(self.patients_folder)
 
