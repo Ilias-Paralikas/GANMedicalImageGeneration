@@ -24,6 +24,7 @@ class ImagePreprocessor():
                     image_datatype,
                     mask_datatype,
                     transforms= normalize,):
+        self.sliced_folder=  sliced_folder
         try :
             os.makedirs(self.sliced_folder)
         except:
@@ -31,7 +32,7 @@ class ImagePreprocessor():
             self.len = len(os.listdir(self.sliced_folder))
             self.numbers = self.extract_numbers(os.listdir(self.sliced_folder))
             self.target_folder = os.path.join(self.sliced_folder,'sliced_'+'_'+ str(dimensions) + '_' + str(slices)+'_'+self.image_datatype.__name__)
-
+            return 
         self.target_folder = os.path.join(self.sliced_folder,'sliced_'+'_'+ str(dimensions) + '_' + str(slices)+'_'+self.image_datatype.__name__)
         self.data_folder = data_folder
         self.mask_folder = os.path.join(data_folder,mask_folder)
@@ -42,7 +43,6 @@ class ImagePreprocessor():
         self.slices = slices
         self.image_datatype = image_datatype
         self.mask_datatype = mask_datatype
-        self.sliced_folder = sliced_folder
         self.transforms  =transforms
       
         masks = os.listdir(self.mask_folder)
