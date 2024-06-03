@@ -33,7 +33,6 @@ class ImagePreprocessor():
             self.numbers = self.extract_numbers(os.listdir(self.sliced_folder))
             self.target_folder = os.path.join(self.sliced_folder,'sliced_'+'_'+ str(dimensions) + '_' + str(slices)+'_'+image_datatype.__name__)
             return 
-        self.target_folder = os.path.join(self.sliced_folder,'sliced_'+'_'+ str(dimensions) + '_' + str(slices)+'_'+self.image_datatype.__name__)
         self.data_folder = data_folder
         self.mask_folder = os.path.join(data_folder,mask_folder)
         self.patients_folder =os.path.join(data_folder,patients_folder)
@@ -44,6 +43,8 @@ class ImagePreprocessor():
         self.image_datatype = image_datatype
         self.mask_datatype = mask_datatype
         self.transforms  =transforms
+        self.target_folder = os.path.join(self.sliced_folder,'sliced_'+'_'+ str(dimensions) + '_' + str(slices)+'_'+self.image_datatype.__name__)
+
       
         masks = os.listdir(self.mask_folder)
         patients = os.listdir(self.patients_folder)
