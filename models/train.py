@@ -15,15 +15,15 @@ def train_GAN(generator,
               disc_lr = 0.0002,
               loss_fn=None,
               device= 'cpu'):
-    def test_compatibility(generator, discriminator,dataloader,noise_shape):
+    def test_compatibility(generator, discriminator,dataloader,noise_shape,device):
         single_element= next(iter(dataloader))[0]
-        noise = torch.randn(1,*noise_shape)
+        noise = torch.randn(1,*noise_shape).to(device)
         fake_image = generator(noise)
         output = discriminator(fake_image)        
         assert single_element.shape == fake_image.squeeze(0).shape
         assert output.shape == torch.Size([1, 1])
         
-    test_compatibility(generator, discriminator,dataloader,noise_shape)
+    test_compatibility(generator, discriminator,dataloader,noise_shape,device)
     gen_optim =gen_optim(generator.parameters(), lr=gen_lr)
     disc_optim = disc_optim(discriminator.parameters(), lr=disc_lr)
     loss_fn = loss_fn()
