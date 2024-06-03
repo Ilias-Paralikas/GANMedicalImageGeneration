@@ -1,13 +1,15 @@
 import torch
 import torch.nn as nn
 
-class Generator(nn.Module):
+from models.bases.generator_base import GeneratorBase
+class Generator(GeneratorBase):
     def __init__(self,noise_shape, channels=64,path = 'models/simple/generator.pth'):
         super(Generator, self).__init__()
         self.path  =path
-        noise_dim  =noise_shape [0]
+        self.noise_shape = noise_shape
+        self.noise_dim  =noise_shape [0]
         self.net = nn.Sequential(
-            self.create_block(noise_dim, channels),
+            self.create_block(self.noise_dim, channels),
             self.create_block(channels, int(channels/2)),
             self.create_block(int(channels/2), int(channels/4)),
             self.create_block(int(channels/4), int(channels/8)),
