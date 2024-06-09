@@ -7,7 +7,7 @@ class GeneratorBase(nn.Module):
         super(GeneratorBase, self).__init__()
         
     def generate(self,batch=1,device='cpu'):
-        noise = torch.randn(batch,*self.noise_shape)
+        noise = torch.randn(batch,*self.noise_shape,device=device)
         return self.forward(noise)
     
     def show_generated_image(self,savefile=None,device='cpu'):
