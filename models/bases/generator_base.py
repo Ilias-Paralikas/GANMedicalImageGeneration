@@ -6,12 +6,11 @@ class GeneratorBase(nn.Module):
         self.visualiser = Visualizer()
         super(GeneratorBase, self).__init__()
         
-    def generate(self,batch=1):
+    def generate(self,batch=1,device='cpu'):
         noise = torch.randn(batch,*self.noise_shape)
         return self.forward(noise)
     
     def show_generated_image(self,savefile=None,device='cpu'):
-        noise = torch.randn(1,*self.noise_shape,device=device)
-        scan  = self.generate()[0].detach().numpy()
+        scan  = self.generate(device=device)[0].detach().numpy()
         image,mask = scan[0],scan[1]
         self.visualiser(image,mask,savefile)
