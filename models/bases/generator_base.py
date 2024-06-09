@@ -11,6 +11,6 @@ class GeneratorBase(nn.Module):
         return self.forward(noise)
     
     def show_generated_image(self,savefile=None,device='cpu'):
-        scan  = self.generate(device=device)[0].cpu().numpy()
+        scan  = self.generate(device=device)[0].cpu().detach().numpy()
         image,mask = scan[0],scan[1]
         self.visualiser(image,mask,savefile)
