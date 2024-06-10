@@ -1,9 +1,6 @@
 import torch
 import torch.nn as nn
 
-import torch
-import torch.nn as nn
-
 def train_GAN(generator,
               discriminator,
               dataloader,
@@ -51,8 +48,10 @@ def train_GAN(generator,
             # get the dicsriminator output
             output = discriminator(real_images).view(-1)
             # calculate the loss between the real and the generated labes
-            disc_loss = loss_fn(output, label)
-            disc_loss.backward()
+            real_loss = loss_fn(output, label)
+            real_loss.backward()
+            disc_optim.step()
+            disc_optim.zero_grad()
             real_images_loss += disc_loss.mean().item()
             # train the discriminator on fake images
             noise  = torch.randn(batch_size, *noise_shape, device=device)
@@ -64,10 +63,10 @@ def train_GAN(generator,
             # get the discriminator output
             output = discriminator(fake_images.detach()).view(-1)
             # calculate the loss
-            disc_loss = loss_fn(output, label)
-            disc_loss.backward()
-            fake_images_loss += disc_loss.mean().item()
+            fake_loss = loss_fn(output, label)
+            fake_loss.backward()
             disc_optim.step()
+            fake_images_loss += fake_loss.mean().item()
         
             # train the generaotr on the output of the discriminator
             gen_optim.zero_grad()

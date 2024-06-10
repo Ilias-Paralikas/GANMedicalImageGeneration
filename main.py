@@ -34,7 +34,7 @@ def main():
     generator_path  =os.path.join(architecture_filepaths,'generator.pth')
 
     
-    gen = generator_choices[hyperparameters['architecture']](
+    generator = generator_choices[hyperparameters['architecture']](
                             noise_shape=hyperparameters['noise_shape'],
                             path=  generator_path).to(device)
     
@@ -43,23 +43,23 @@ def main():
         'Simple': SimpleDiscriminator
     }
     discriminator_path  =   os.path.join(architecture_filepaths,'discriminator.pth')
-    disc = discriminator_choices[hyperparameters['architecture']](
+    discriminator = discriminator_choices[hyperparameters['architecture']](
         in_channels=2,
         out_channels=512,
         path=discriminator_path
     ).to(device)
     
     try:
-        gen.load_state_dict(torch.load(gen.path))
-        disc.load_state_dict(torch.load(disc.path))
+        generator.load_state_dict(torch.load(generator.path))
+        discriminator.load_state_dict(torch.load(discriminator.path))
         print("Weights loaded")
     except:
         print("No weights found")
         
     dataset=BreastCancerDataset(sliced_folder=args.sliced_folder)
     dataloader=  torch.utils.data.DataLoader(dataset, batch_size=hyperparameters['batch_size'], shuffle=True, num_workers=0)
-    train_GAN(generator=gen,
-              discriminator=disc,
+    train_GAN(generator=generator,
+              discriminator=discriminator,
               dataloader=dataloader,
               noise_shape=hyperparameters['noise_shape'],
               epochs=hyperparameters['epochs'],
@@ -69,7 +69,7 @@ def main():
               disc_lr = hyperparameters['disc_lr'],
               loss_fn=getattr(nn, hyperparameters['loss_fn']),
               device= device)
-    gen.show_generated_image(savefile=os.path.join(architecture_filepaths,'img.jpg'),
+    generator.show_generated_image(savefile=os.path.join(architecture_filepaths,'img.jpg'),
                              device=device)
 
 
