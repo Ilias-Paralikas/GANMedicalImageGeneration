@@ -52,7 +52,7 @@ def train_GAN(generator,
             real_loss.backward()
             disc_optim.step()
             disc_optim.zero_grad()
-            real_images_loss += disc_loss.mean().item()
+            real_images_loss += real_loss.mean().item()
             # train the discriminator on fake images
             noise  = torch.randn(batch_size, *noise_shape, device=device)
             
