@@ -79,7 +79,7 @@ def train_GAN(generator,
             gen_loss.backward()
             generator_loss += gen_loss.mean().item()
             gen_optim.step()
-                
+            print(f"Epoch {epoch} Generator Loss: {generator_loss} Discriminator Loss: {real_images_loss + fake_images_loss}")
             torch.save(generator.state_dict(), generator.path)
             torch.save(discriminator.state_dict(), discriminator.path)
 
