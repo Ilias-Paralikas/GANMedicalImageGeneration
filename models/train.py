@@ -25,66 +25,59 @@ def train_GAN(generator,
     disc_optim = disc_optim(discriminator.parameters(), lr=disc_lr)
     loss_fn = loss_fn()
         
-    gen_losses = []
-    disc_losses = []
+    generator_loss_history = []
+    discriminator_loss_history = []
 
 
     real_label = 1
     fake_label = 0
     for epoch in range(epochs):
-        real_images_loss = 0
-        fake_images_loss = 0
-        generator_loss = 0
-        for real_images in dataloader:
-            # train discriminator on real image
-            # place the real images on the device
-            real_images = real_images.to(device)
-            # zero the grad
-            disc_optim.zero_grad()
-            # get the batch size
-            batch_size = real_images.shape[0]
-            # create a label array with 1s, as we are talking about real images
-            label = torch.full((batch_size,), real_label, dtype=torch.float, device=device)
-            # get the dicsriminator output
-            output = discriminator(real_images).view(-1)
-            # calculate the loss between the real and the generated labes
-            real_loss = loss_fn(output, label)
-            real_loss.backward()
-            disc_optim.step()
-            disc_optim.zero_grad()
-            real_images_loss += real_loss.mean().item()
-            # train the discriminator on fake images
-            noise  = torch.randn(batch_size, *noise_shape, device=device)
-            
-            # get the fake images
-            fake_images = generator(noise)
-            # fill the label array with 0s
-            label.fill_(fake_label)
-            # get the discriminator output
-            output = discriminator(fake_images.detach()).view(-1)
-            # calculate the loss
-            fake_loss = loss_fn(output, label)
-            fake_loss.backward()
-            disc_optim.step()
-            fake_images_loss += fake_loss.mean().item()
-        
-            # train the generaotr on the output of the discriminator
-            gen_optim.zero_grad()
-            # the idea is that we want the output of the discriminator to be 1, 
-            # so it is fooled and thinks that these are real images, so we 
-            label.fill_(real_label)
-            output = discriminator(fake_images).view(-1)
-            gen_loss = loss_fn(output, label)
-            gen_loss.backward()
-            generator_loss += gen_loss.mean().item()
-            gen_optim.step()
-            print(f"Epoch {epoch} Generator Loss: {generator_loss} Discriminator Loss: {real_images_loss + fake_images_loss}")
+        discriminator_epoch_loss = 0
+        generator_epoch_loss = 0
+        for i,real_images in enumerate(dataloader):
+          disc_optim.zero_grad()
+          
+          real_images = real_images.to(device)
+          batch_size = real_images.shape[0]
+
+          label = torch.full((batch_size,), fake_label, dtype=torch.float, device=device)
+          noise  = torch.randn(batch_size, *noise_shape, device=device)
+
+          fake_images = generator(noise)
+          output = discriminator(fake_images.detach()).view(-1)
+
+          fake_loss  = loss_fn(output,label)
+          fake_loss.backward()
+      
+
+          label.fill_(real_label)
+          output = discriminator(real_images).view(-1)
+          # # calculate the loss between the real and the generated labes
+          real_loss = loss_fn(output, label)
+          real_loss.backward()
+
+          disc_optim.step()
+
+          disc_loss = real_loss  + fake_loss
+          print('Discriminaor Loss :',disc_loss.item())
+          discriminator_epoch_loss += disc_loss.item()
+
+          gen_optim.zero_grad()
+          label.fill_(real_label)  
+          output = discriminator(fake_images).view(-1)
+          gen_loss = loss_fn(output,label)
+          gen_loss.backward()
+          gen_optim.step()
+          
+          print('Generator Loss :',gen_loss.item())
+          generator_epoch_loss += gen_loss.item()
+          
+          if i % 10:
             torch.save(generator.state_dict(), generator.path)
             torch.save(discriminator.state_dict(), discriminator.path)
-
             
-        gen_losses.append(generator_loss)
-        disc_losses.append(real_images_loss + fake_images_loss)
-        print(f"Epoch {epoch} Generator Loss: {generator_loss} Discriminator Loss: {real_images_loss + fake_images_loss}")
+        discriminator_loss_history.append(discriminator_epoch_loss)
+        generator_loss_history.append(generator_epoch_loss)
+        print(f"Epoch {epoch} Generator Loss: {generator_epoch_loss/ len(dataloader)} Discriminator Loss: {discriminator_epoch_loss/ len(dataloader)}")
       
-    return gen_losses, disc_losses
+    return generator_loss_history, discriminator_loss_history
