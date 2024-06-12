@@ -11,7 +11,8 @@ def train_GAN(generator,
               disc_optim=None,
               disc_lr = 0.0002,
               loss_fn=None,
-              device= 'cpu'):
+              device= 'cpu',
+              save_frequency=10):
     def test_compatibility(generator, discriminator,dataloader,noise_shape,device):
       single_element= next(iter(dataloader))[0]
       noise = torch.randn(1,*noise_shape).to(device)
@@ -72,7 +73,7 @@ def train_GAN(generator,
           print('Generator Loss :',gen_loss.item())
           generator_epoch_loss += gen_loss.item()
           
-          if i % 10:
+          if i % save_frequency ==0:
             torch.save(generator.state_dict(), generator.path)
             torch.save(discriminator.state_dict(), discriminator.path)
             

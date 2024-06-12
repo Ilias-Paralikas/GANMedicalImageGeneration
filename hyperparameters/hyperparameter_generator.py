@@ -19,7 +19,7 @@ def main():
     parser.add_argument('--gen_optim', type=str, default='Adam', help='selected from https://pytorch.org/docs/stable/optim.html#algorithms, provided as a string')
     parser.add_argument('--disc_optim', type=str, default='Adam', help='selected from https://pytorch.org/docs/stable/optim.html#algorithms, provided as a string')
     parser.add_argument('--loss_fn', type=str, default='BCELoss', help='selected from https://pytorch.org/docs/stable/nn.html#loss-functions, provided as a string, without the nn')
-    
+    parser.add_argument('--save_frequency', type=int, default=10, help='comma seperated string of integers')
     
     args  =parser.parse_args()
     hyperparameters ={
