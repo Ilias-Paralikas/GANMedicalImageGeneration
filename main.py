@@ -58,6 +58,8 @@ def main():
         
     dataset=BreastCancerDataset(sliced_folder=args.sliced_folder)
     dataloader=  torch.utils.data.DataLoader(dataset, batch_size=hyperparameters['batch_size'], shuffle=True, num_workers=0)
+    generator.show_generated_image(savefile=os.path.join(architecture_filepaths,'img.jpg'),
+                             device=device)
     train_GAN(generator=generator,
               discriminator=discriminator,
               dataloader=dataloader,
