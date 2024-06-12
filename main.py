@@ -16,6 +16,7 @@ def main():
     parser.add_argument('--hyperparameters_file', type=str, default='hyperparameters/hyperparameters.json', help='String')
     parser.add_argument('--save_filepaths', type=str, default='../saved_models', help='String')
     parser.add_argument('--sliced_folder',type=str,default='../sliced')
+    parser.add_argument('--Reinitialize_models', type=bool, default=False, help='Float')
 
 
     args =parser.parse_args()    
@@ -49,12 +50,13 @@ def main():
         path=discriminator_path
     ).to(device)
     
-    try:
-        generator.load_state_dict(torch.load(generator.path))
-        discriminator.load_state_dict(torch.load(discriminator.path))
-        print("Weights loaded")
-    except:
-        print("No weights found")
+    if not args.Reinitialize_models:
+        try:
+            generator.load_state_dict(torch.load(generator.path))
+            discriminator.load_state_dict(torch.load(discriminator.path))
+            print("Weights loaded")
+        except:
+            print("No weights found")
         
     dataset=BreastCancerDataset(sliced_folder=args.sliced_folder)
     dataloader=  torch.utils.data.DataLoader(dataset, batch_size=hyperparameters['batch_size'], shuffle=True, num_workers=0)
