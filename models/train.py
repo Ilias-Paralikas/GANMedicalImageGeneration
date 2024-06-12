@@ -32,6 +32,8 @@ def train_GAN(generator,
 
     real_label = 1
     fake_label = 0
+    print('Started Training')
+
     for epoch in range(epochs):
         discriminator_epoch_loss = 0
         generator_epoch_loss = 0
