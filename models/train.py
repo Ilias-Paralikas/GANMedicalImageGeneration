@@ -78,6 +78,7 @@ def train_GAN(generator,
           if i % save_frequency ==0:
             torch.save(generator.state_dict(), generator.path)
             torch.save(discriminator.state_dict(), discriminator.path)
+            print('Model Saved')
             
         discriminator_loss_history.append(discriminator_epoch_loss)
         generator_loss_history.append(generator_epoch_loss)
