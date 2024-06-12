@@ -30,7 +30,8 @@ def main():
         'disc_lr':args.disc_lr,
         'gen_optim':args.gen_optim,
         'disc_optim':args.disc_optim,
-        'loss_fn':args.loss_fn
+        'loss_fn':args.loss_fn,
+        'save_frequency':args.save_frequency
         
     }
     if args.architecture == "Simple":

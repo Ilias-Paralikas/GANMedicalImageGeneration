@@ -73,7 +73,7 @@ def main():
               disc_lr = hyperparameters['disc_lr'],
               loss_fn=getattr(nn, hyperparameters['loss_fn']),
               device= device,
-              save_frequency=hyperparameters['save_frequency'],)
+              save_frequency=hyperparameters['save_frequency'])
     generator.show_generated_image(savefile=os.path.join(architecture_filepaths,'img.jpg'),
                              device=device)
 
