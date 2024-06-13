@@ -52,8 +52,8 @@ def main():
     
     if not args.Reinitialize_models:
         try:
-            generator.load_state_dict(torch.load(generator.path))
-            discriminator.load_state_dict(torch.load(discriminator.path))
+            generator.load_state_dict(torch.load(generator.path,map_location=torch.device(device)))
+            discriminator.load_state_dict(torch.load(discriminator.path,map_location=torch.device(device)))
             print("Weights loaded")
         except:
             print("No weights found")

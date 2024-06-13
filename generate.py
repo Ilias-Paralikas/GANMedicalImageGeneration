@@ -40,7 +40,7 @@ def main():
     
 
     try:
-        generator.load_state_dict(torch.load(generator.path))
+        generator.load_state_dict(torch.load(generator.path,map_location=torch.device(device)))
         print("Weights loaded")
     except:
         print("No weights found")
