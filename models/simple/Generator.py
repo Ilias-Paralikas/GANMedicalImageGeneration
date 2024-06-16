@@ -3,7 +3,7 @@ import torch.nn as nn
 
 from models.bases.generator_base import GeneratorBase
 class SimpleGenerator(GeneratorBase):
-    def __init__(self,noise_shape, channels=64,path = 'models/simple/generator.pth'):
+    def __init__(self,noise_shape=(128,4,4,1), channels=1024,out_channels=2,path = 'models/simple/generator.pth'):
         super(SimpleGenerator, self).__init__()
         self.path  =path
         self.noise_shape = noise_shape
@@ -14,7 +14,7 @@ class SimpleGenerator(GeneratorBase):
             self.create_block(int(channels/2), int(channels/4)),
             self.create_block(int(channels/4), int(channels/8)),
             self.create_block(int(channels/8), int(channels/16)),
-            self.create_block(int(channels/16), int(channels/32)),
+            self.create_block(int(channels/16), out_channels),
             nn.Tanh()
         )
     def forward(self, x):

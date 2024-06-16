@@ -62,7 +62,7 @@ def train_GAN(generator,
           disc_optim.step()
 
           disc_loss = real_loss  + fake_loss
-          print('Discriminaor Loss :',disc_loss.item())
+          # print('Discriminaor Loss :',disc_loss.item())
           discriminator_epoch_loss += disc_loss.item()
 
           gen_optim.zero_grad()
@@ -72,7 +72,7 @@ def train_GAN(generator,
           gen_loss.backward()
           gen_optim.step()
           
-          print('Generator Loss :',gen_loss.item())
+          # print('Generator Loss :',gen_loss.item())
           generator_epoch_loss += gen_loss.item()
           
           if i % save_frequency ==0:
