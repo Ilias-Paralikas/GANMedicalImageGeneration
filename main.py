@@ -17,7 +17,7 @@ def main():
     parser.add_argument('--save_filepaths', type=str, default='../saved_models', help='String')
     parser.add_argument('--sliced_folder',type=str,default='../sliced')
     parser.add_argument('--Reinitialize_models', type=bool, default=False, help='Float')
-
+    parser.add_argument('--verbose_frequency', type=int, default=10, help='Float')
 
     args =parser.parse_args()    
     
@@ -72,7 +72,8 @@ def main():
               disc_lr = hyperparameters['disc_lr'],
               loss_fn=getattr(nn, hyperparameters['loss_fn']),
               device= device,
-              save_frequency=hyperparameters['save_frequency'])
+              save_frequency=hyperparameters['save_frequency'],
+              verbose_frequency=args.verbose_frequency)
 
 
 
