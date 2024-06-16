@@ -75,7 +75,7 @@ def train_GAN(generator,
           # print('Generator Loss :',gen_loss.item())
           generator_epoch_loss += gen_loss.item()
           
-          if i % save_frequency ==0:
+          if i % save_frequency ==save_frequency-1:
             torch.save(generator.state_dict(), generator.path)
             torch.save(discriminator.state_dict(), discriminator.path)
             print('Model Saved')
