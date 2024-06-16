@@ -79,7 +79,8 @@ def train_GAN(generator,
             torch.save(generator.state_dict(), generator.path)
             torch.save(discriminator.state_dict(), discriminator.path)
             print('Model Saved')
-            print(f"Generator Loss: {generator_epoch_loss/ i} Discriminator Loss: {discriminator_epoch_loss/ i}")
+            if i !=0:
+              print(f"Generator Loss: {generator_epoch_loss/ i} Discriminator Loss: {discriminator_epoch_loss/ i}")
         discriminator_loss_history.append(discriminator_epoch_loss)
         generator_loss_history.append(generator_epoch_loss)
         print(f"Epoch {epoch} Generator Loss: {generator_epoch_loss/ len(dataloader)} Discriminator Loss: {discriminator_epoch_loss/ len(dataloader)}")
