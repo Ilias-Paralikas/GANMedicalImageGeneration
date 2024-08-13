@@ -34,10 +34,7 @@ def main():
         'save_frequency':args.save_frequency
         
     }
-    if args.architecture == "Simple":
-        hyperparameters['noise_shape'] =(128,4,4,1)
-   
-      
+
     json_object = json.dumps(hyperparameters,indent=4) ### this saves the array in .json format)
     
     with open(args.hyperparameters_file, "w") as outfile:

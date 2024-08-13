@@ -1,7 +1,7 @@
 from utils.dataloader import BreastCancerDataset
 from models.simple.Discriminator import SimpleDiscriminator
 from models.simple.Generator import SimpleGenerator
-from models.train import train_GAN
+from models.static_train import static_train_GAN
 import torch
 import torch.nn as nn
 import argparse
@@ -57,9 +57,9 @@ def main():
             print("No weights found")
         
     dataset=BreastCancerDataset(sliced_folder=args.sliced_folder)
-    dataloader=  torch.utils.data.DataLoader(dataset, batch_size=hyperparameters['batch_size'], shuffle=True, num_workers=0)
+    dataloader=  torch.utils.data.DataLoader(dataset, batch_size=1, shuffle=True, num_workers=0)
 
-    train_GAN(generator=generator,
+    static_train_GAN(generator=generator,
               discriminator=discriminator,
               dataloader=dataloader,
               noise_shape=generator.noise_shape,

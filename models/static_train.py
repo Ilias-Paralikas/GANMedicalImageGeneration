@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 
-def train_GAN(generator,
+def static_train_GAN(generator,
               discriminator,
               dataloader,
               noise_shape,
@@ -29,7 +29,14 @@ def train_GAN(generator,
         
     generator_loss_history = []
     discriminator_loss_history = []
+    torch.manual_seed(0)
 
+    # If using CUDA
+    if torch.cuda.is_available():
+        torch.cuda.manual_seed(0)
+        torch.cuda.manual_seed_all(0)  # If using multi-GPU
+
+    noise  = torch.randn(1, *noise_shape, device=device)
 
     real_label = 1
     fake_label = 0
@@ -42,10 +49,9 @@ def train_GAN(generator,
           disc_optim.zero_grad()
           
           real_images = real_images.to(device)
-          batch_size = real_images.shape[0]
+          batch_size = 1
 
           label = torch.full((batch_size,), fake_label, dtype=torch.float, device=device)
-          noise  = torch.randn(batch_size, *noise_shape, device=device)
 
           fake_images = generator(noise)
           output = discriminator(fake_images.detach()).view(-1)
