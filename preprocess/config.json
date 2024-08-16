@@ -1,0 +1,10 @@
+{
+    "data_folder": "data",
+    "mask_folder": "masks",
+    "patients_folder": "patients",
+    "sliced_folder": "sliced",
+    "dimensions": 256,
+    "slices": 64,
+    "image_datatype": "np.float32",
+    "mask_datatype": "np.bool_"
+}

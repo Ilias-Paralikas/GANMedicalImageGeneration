@@ -4,13 +4,10 @@ import torch.nn as nn
 def train_GAN(generator,
               discriminator,
               dataloader,
-              noise_shape,
+              gen_optim,
+              disc_optim,
+              loss_fn,
               epochs=1,
-              gen_optim =None,
-              gen_lr = 0.0002,
-              disc_optim=None,
-              disc_lr = 0.0002,
-              loss_fn=None,
               device= 'cpu',
               save_frequency=10,
               verbose_frequency=10):
@@ -22,10 +19,9 @@ def train_GAN(generator,
       assert single_element.shape == fake_image.squeeze(0).shape
       assert output.shape == torch.Size([1, 1])
         
+    noise_shape = generator.noise_shape
+
     test_compatibility(generator, discriminator,dataloader,noise_shape,device)
-    gen_optim =gen_optim(generator.parameters(), lr=gen_lr)
-    disc_optim = disc_optim(discriminator.parameters(), lr=disc_lr)
-    loss_fn = loss_fn()
         
     generator_loss_history = []
     discriminator_loss_history = []
