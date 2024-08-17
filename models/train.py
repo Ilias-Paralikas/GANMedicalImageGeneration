@@ -10,7 +10,8 @@ def train_GAN(generator,
               epochs=1,
               device= 'cpu',
               save_frequency=10,
-              verbose_frequency=10):
+              verbose_frequency=10,
+              static_input= False):
     def test_compatibility(generator, discriminator,dataloader,noise_shape,device):
       single_element= next(iter(dataloader))[0]
       noise = torch.randn(1,*noise_shape).to(device)
@@ -30,6 +31,13 @@ def train_GAN(generator,
     real_label = 1
     fake_label = 0
     print('Started Training')
+    if static_input:
+      torch.manual_seed(0)
+      # If using CUDA
+      if torch.cuda.is_available():
+          torch.cuda.manual_seed(0)
+          torch.cuda.manual_seed_all(0) 
+      static_noise  = torch.randn(1, *noise_shape, device=device)
 
     for epoch in range(epochs):
         discriminator_epoch_loss = 0
@@ -41,7 +49,11 @@ def train_GAN(generator,
           batch_size = real_images.shape[0]
 
           label = torch.full((batch_size,), fake_label, dtype=torch.float, device=device)
-          noise  = torch.randn(batch_size, *noise_shape, device=device)
+          
+          if static_input:
+            noise  = static_noise
+          else:
+            noise  = torch.randn(batch_size, *noise_shape, device=device)
 
           fake_images = generator(noise)
           output = discriminator(fake_images.detach()).view(-1)

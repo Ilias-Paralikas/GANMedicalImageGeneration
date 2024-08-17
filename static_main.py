@@ -18,6 +18,7 @@ def main():
     parser.add_argument('--sliced_folder',type=str,default='../sliced')
     parser.add_argument('--Reinitialize_models', type=bool, default=False, help='Float')
     parser.add_argument('--verbose_frequency', type=int, default=10, help='Float')
+    parser.add_argument('--static', type=bool, default=False, help='Float')
 
     args =parser.parse_args()    
     
@@ -71,7 +72,9 @@ def main():
               loss_fn=getattr(nn, hyperparameters['loss_fn']),
               device= device,
               save_frequency=hyperparameters['save_frequency'],
-              verbose_frequency=args.verbose_frequency)
+              verbose_frequency=args.verbose_frequency,
+              static_input=args.static
+              )
 
 
 
