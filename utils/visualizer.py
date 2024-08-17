@@ -15,7 +15,7 @@ class Visualizer():
         return
 
 
-    def __call__(self, images=None, masks=None,savefile=None):
+    def __call__(self, images=None, masks=None,savefile=None,apply_threshold=True):
         
         if images is None and masks is None:
             print('please provide images, masks, or both')
@@ -25,8 +25,9 @@ class Visualizer():
         if not isinstance(images, list) and images is not None:
             images = [images[:,:,i].detach() for i in range(images.shape[-1])] if len(images.shape) == 3 else [images]
         if not isinstance(masks, list) and masks is not None:
-            masks = masks.where(masks>0.5, torch.tensor(1.0))
-            masks = masks.where(masks<0.5, torch.tensor(0.0))
+            if apply_threshold:
+                masks = masks > 0.5
+                masks = masks.to(torch.int)
             masks = [masks[:,:,i].detach()  for i in range(masks.shape[-1])] if len(masks.shape) == 3 else [masks]
         num_images = len(images) if images is not None else 0
         num_masks = len(masks) if masks is not None else 0

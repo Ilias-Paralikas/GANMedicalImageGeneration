@@ -10,8 +10,8 @@ class GeneratorBase(nn.Module):
         noise = torch.randn(batch,*self.noise_shape,device=device)
         return self.forward(noise)
     
-    def show_generated_image(self,savefile=None,device='cpu'):
+    def show_generated_image(self,savefile=None,device='cpu',apply_threshold=True):
         scan  = self.generate(device=device)[0]
         scan = scan.cpu().detach()
         image,mask = scan[0],scan[1]
-        self.visualiser(image,mask,savefile)
+        self.visualiser(image,mask,savefile,apply_threshold)
