@@ -23,12 +23,12 @@ class Visualizer():
 
         # If images or masks are not a list, convert them into a list
         if not isinstance(images, list) and images is not None:
-            images = [images[:,:,i].detach() for i in range(images.shape[-1])] if len(images.shape) == 3 else [images]
+            images = [images[:,:,i].detach().cpu() for i in range(images.shape[-1])] if len(images.shape) == 3 else [images]
         if not isinstance(masks, list) and masks is not None:
             if apply_threshold:
                 masks = masks > 0.5
                 masks = masks.to(torch.int)
-            masks = [masks[:,:,i].detach()  for i in range(masks.shape[-1])] if len(masks.shape) == 3 else [masks]
+            masks = [masks[:,:,i].detach().cpu()   for i in range(masks.shape[-1])] if len(masks.shape) == 3 else [masks]
         num_images = len(images) if images is not None else 0
         num_masks = len(masks) if masks is not None else 0
         total = max(num_images, num_masks)
