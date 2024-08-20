@@ -20,7 +20,7 @@ def main():
     parser.add_argument('--verbose_frequency', type=int, default=10, help='Float')
     parser.add_argument('--epochs',type=int,default=1)
     parser.add_argument('--generator_epochs',type=int,default=1)
-    parser.add_argument('--static',type=bool,default=False)
+    parser.add_argument('--static',type=bool,default=True)
 
     args =parser.parse_args()    
     

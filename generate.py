@@ -7,7 +7,7 @@ import torch.nn as nn
 import argparse
 import json
 import os
-
+from utils import generate_fixed_random_tensor
 def main():
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     print(device)
@@ -15,7 +15,7 @@ def main():
 
     parser.add_argument('--hyperparameters_file', type=str, default='hyperparameters/hyperparameters.json', help='String')
     parser.add_argument('--save_filepaths', type=str, default='../saved_models', help='String')
-
+    parser.add_argument('--static', type=bool, default=False, help='Boolean')
 
     args =parser.parse_args()    
     
@@ -44,8 +44,13 @@ def main():
     except:
         print("No weights found")
 
+    if args.static :
+        noise = generate_fixed_random_tensor(0,generator.noise_shape,device=device)
+        generator.show_generated_image(savefile=os.path.join(architecture_filepaths,'img.jpg'),
+                            device=device,noise=noise)
+    else: 
 
-    generator.show_generated_image(savefile=os.path.join(architecture_filepaths,'img.jpg'),
+        generator.show_generated_image(savefile=os.path.join(architecture_filepaths,'img.jpg'),
                             device=device)
 
 
