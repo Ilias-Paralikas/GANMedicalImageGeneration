@@ -1,35 +1,25 @@
 import torch
 import torch.nn as nn
-
-
 class SimpleDiscriminator(nn.Module):
-    def __init__(self,in_channels=2,out_channels=512,path = 'models/simple/discriminator.pth'):
-        super(SimpleDiscriminator, self).__init__()
-        self.path = path
-        self.in_channels = in_channels  
-        kernel_size = 3
-        stride = 1
-        padding = 1
-        self.network = nn.Sequential(
-            self.create_block(self.in_channels, int(out_channels / 8), kernel_size, stride, padding),
-            self.create_block(int(out_channels / 8), int(out_channels / 4), kernel_size, stride, padding),
-            self.create_block(int(out_channels / 4), int(out_channels / 2), kernel_size, stride, padding),
-            self.create_block(int(out_channels / 2), out_channels, kernel_size, stride, padding),
-            nn.Flatten(),
-            nn.ReLU(),
-            nn.Linear(524288 , 1),
+    def __init__(self,path,features=16,block_numbers=4):
+        super(SimpleDiscriminator,self).__init__()
+        self.path= path
+        self.disc =  nn.Sequential(
+            nn.Conv3d(2,features,4,2,1),
+            nn.LeakyReLU(0.2),
+            *[self._block(features* 2**i,features*2**(i+1),4,2,1) for i in range(block_numbers)],
+            nn.Conv3d(features*2**(block_numbers),1,(10,10,4),2,1),
             nn.Sigmoid()
-            
+
         )
-    def forward(self,x):
-        return self.network(x)
+    def _block(self,in_channels,out_channels,kernel_size,stride,padding):
+        return nn.Sequential(
+            nn.Conv3d(in_channels,out_channels,kernel_size,stride,padding,bias=False),
+            nn.BatchNorm3d(out_channels),
+            nn.LeakyReLU(0.2)
+        )
         
-    def create_block(self, in_channels, out_channels, kernel_size, stride, padding):
-            return nn.Sequential(
-                nn.Conv3d(in_channels=in_channels, out_channels=out_channels, kernel_size=kernel_size, stride=stride, padding=padding),
-                nn.LeakyReLU(0.2, inplace=True),
-                nn.Conv3d(in_channels=out_channels, out_channels=out_channels, kernel_size=kernel_size, stride=stride, padding=padding),
-                nn.LeakyReLU(0.2, inplace=True),
-                nn.AvgPool3d(kernel_size=2, stride=2)
-            )
-    
+    def forward(self,x):
+        return self.disc(x).view(-1)
+                      
+        

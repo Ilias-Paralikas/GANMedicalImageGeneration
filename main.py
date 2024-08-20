@@ -18,6 +18,9 @@ def main():
     parser.add_argument('--sliced_folder',type=str,default='../sliced')
     parser.add_argument('--Reinitialize_models', type=bool, default=False, help='Float')
     parser.add_argument('--verbose_frequency', type=int, default=10, help='Float')
+    parser.add_argument('--epochs',type=int,default=1)
+    parser.add_argument('--generator_epochs',type=int,default=1)
+    parser.add_argument('--static',type=bool,default=False)
 
     args =parser.parse_args()    
     
@@ -35,7 +38,9 @@ def main():
     generator_path  =os.path.join(architecture_filepaths,'generator.pth')
 
     
-    generator = generator_choices[hyperparameters['architecture']](path=  generator_path).to(device)
+    generator = generator_choices[hyperparameters['architecture']](
+        path=  generator_path
+    ).to(device)
     
     
     discriminator_choices ={
@@ -43,8 +48,6 @@ def main():
     }
     discriminator_path  =   os.path.join(architecture_filepaths,'discriminator.pth')
     discriminator = discriminator_choices[hyperparameters['architecture']](
-        in_channels=2,
-        out_channels=512,
         path=discriminator_path
     ).to(device)
     
@@ -59,20 +62,26 @@ def main():
     dataset=BreastCancerDataset(sliced_folder=args.sliced_folder)
     dataloader=  torch.utils.data.DataLoader(dataset, batch_size=hyperparameters['batch_size'], shuffle=True, num_workers=0)
 
-    train_GAN(generator=generator,
-              discriminator=discriminator,
-              dataloader=dataloader,
-              noise_shape=generator.noise_shape,
-              epochs=hyperparameters['epochs'],
-              gen_optim =getattr(torch.optim, hyperparameters['gen_optim']),
-              gen_lr = hyperparameters['gen_lr'],
-              disc_optim=getattr(torch.optim, hyperparameters['disc_optim']),
-              disc_lr = hyperparameters['disc_lr'],
-              loss_fn=getattr(nn, hyperparameters['loss_fn']),
-              device= device,
-              save_frequency=hyperparameters['save_frequency'],
-              verbose_frequency=args.verbose_frequency)
 
+
+    gen_optimizer = torch.optim.Adam(generator.parameters(), lr= hyperparameters['gen_lr'],betas=(0.5,0.999) )
+    disc_optimizer = torch.optim.Adam(discriminator.parameters(), lr= hyperparameters['disc_lr'],betas=(0.5,0.999))
+    loss_function = nn.BCELoss()
+    
+    train_GAN(generator,
+              discriminator,
+              gen_optimizer,
+              disc_optimizer,
+              loss_function,
+              dataloader,
+              epochs=args.epochs,
+              generator_epochs=args.generator_epochs,
+              device=device,
+              save_frequency=1,
+              versbose_frequency=args.verbose_frequency,
+              static=args.static)
+  
+    
 
 
 
