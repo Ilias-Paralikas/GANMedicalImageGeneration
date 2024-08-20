@@ -15,7 +15,7 @@ def main():
 
     parser.add_argument('--hyperparameters_file', type=str, default='hyperparameters/hyperparameters.json', help='String')
     parser.add_argument('--save_filepaths', type=str, default='../saved_models', help='String')
-    parser.add_argument('--static', type=bool, default=False, help='Boolean')
+    parser.add_argument('--static', type=bool, default=True, help='Boolean')
 
     args =parser.parse_args()    
     

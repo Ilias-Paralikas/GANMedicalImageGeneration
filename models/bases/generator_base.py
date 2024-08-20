@@ -12,7 +12,7 @@ class GeneratorBase(nn.Module):
     
     def show_generated_image(self,savefile=None,device='cpu',apply_threshold=True,noise=None):
         if noise is not None:
-            scan = self.forward(noise)
+            scan = self.forward(noise)[0]
         else:
             scan  = self.generate(device=device)[0]
         scan = scan.cpu().detach()
