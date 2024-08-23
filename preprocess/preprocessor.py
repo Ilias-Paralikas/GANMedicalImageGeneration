@@ -7,14 +7,6 @@ from scipy.ndimage import zoom
 import numpy as np
 
 
-
-def normalize(image):
-    min_val = torch.min(image)
-    max_val = torch.max(image)
-    assert max_val != min_val
-    image = (image - min_val) / (max_val - min_val)  # Normalize to [0, 1]
-    return image
-
 class ImagePreprocessor():
     def __init__(self,data_folder,
                     mask_folder,
@@ -24,7 +16,7 @@ class ImagePreprocessor():
                     slices,
                     image_datatype,
                     mask_datatype,
-                    transforms):
+                    transforms=None):
         self.sliced_folder=  sliced_folder
 
         try :

@@ -1,4 +1,4 @@
-from .preprocessor import ImagePreprocessor, normalize
+from .preprocessor import ImagePreprocessor
 import json
 import numpy as np
 import os
@@ -16,8 +16,7 @@ def get_preprocessor(config_filepath = './preprocess/config.json',
         dimensions=config['dimensions'],
         slices=config['slices'],
         image_datatype=eval(config['image_datatype']),
-        mask_datatype=eval(config['mask_datatype']),
-        transforms=normalize
-    )
+        mask_datatype=eval(config['mask_datatype'])
+        )
     
     return preprocessor
